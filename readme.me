@@ -1,0 +1,219 @@
+pip3 install Flask
+
+pip3 install psycopg2
+
+python3 -m venv venv
+
+source venv/bin/activate 
+
+
+Step 2: Create the Flask Project Structure
+Create the following folder structure:
+
+
+employee_management_system/
+│
+├── app.py
+├── requirements.txt
+├── static/
+│   ├── css/
+│   └── js/
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── add_employee.html
+│   └── view_employees.html
+└── database.py
+
+
+Step 3: Set Up PostgreSQL Database
+Create a Database:
+
+Open PostgreSQL (e.g., using psql or pgAdmin).
+
+Create a database named employee_db.
+
+sql
+CREATE DATABASE employee_db;
+Create a Table:
+
+Create a table employees to store employee details.
+
+CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15) UNIQUE NOT NULL,
+    department VARCHAR(50)
+);
+
+
+Step 4: Connect Flask to PostgreSQL
+Create a database.py file to handle database connections:
+
+
+import psycopg2
+
+def get_db_connection():
+    conn = psycopg2.connect(
+        dbname="employee_db",
+        user="your_username",  # Replace with your PostgreSQL username
+        password="your_password",  # Replace with your PostgreSQL password
+        host="localhost",
+        port="5432"
+    )
+    return conn
+
+
+Step 5: Create Flask Routes
+In app.py, set up the Flask application and define routes for CRUD operations:
+
+
+from flask import Flask, render_template, request, redirect, url_for
+from database import get_db_connection
+
+app = Flask(__name__)
+
+# Home Route
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Add Employee Route
+@app.route('/add', methods=['GET', 'POST'])
+def add_employee():
+    if request.method == 'POST':
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        phone = request.form['phone']
+        department = request.form['department']
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            'INSERT INTO employees (first_name, last_name, email, phone, department)'
+            'VALUES (%s, %s, %s, %s, %s)',
+            (first_name, last_name, email, phone, department)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for('view_employees'))
+    return render_template('add_employee.html')
+
+# View Employees Route
+@app.route('/view')
+def view_employees():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM employees;')
+    employees = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('view_employees.html', employees=employees)
+
+# Run the App
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+Step 6: Create HTML Templates
+base.html (Base Template):
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Employee Management System</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('add_employee') }}">Add Employee</a>
+            <a href="{{ url_for('view_employees') }}">View Employees</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
+
+
+index.html (Home Page):
+
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Welcome to the Employee Management System</h2>
+{% endblock %}
+
+
+add_employee.html (Add Employee Form):
+
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add Employee</h2>
+<form method="POST">
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required>
+    <br>
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required>
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="phone">Phone:</label>
+    <input type="text" id="phone" name="phone" required>
+    <br>
+    <label for="department">Department:</label>
+    <input type="text" id="department" name="department" required>
+    <br>
+    <button type="submit">Add Employee</button>
+</form>
+{% endblock %}
+
+
+view_employees.html (View Employees):
+
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Employee List</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee[0] }}</td>
+            <td>{{ employee[1] }}</td>
+            <td>{{ employee[2] }}</td>
+            <td>{{ employee[3] }}</td>
+            <td>{{ employee[4] }}</td>
+            <td>{{ employee[5] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+python app.py
