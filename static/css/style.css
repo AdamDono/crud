@@ -1,0 +1,108 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+header {
+    background-color: #6200ea; /* Purple */
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+nav {
+    margin-top: 1rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ffd600; /* Yellow */
+}
+
+main {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #6200ea; /* Purple */
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form label {
+    font-weight: bold;
+    color: #6200ea; /* Purple */
+}
+
+form input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+form button {
+    padding: 0.75rem;
+    background-color: #6200ea; /* Purple */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #3700b3; /* Darker Purple */
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table th, table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #6200ea; /* Purple */
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
