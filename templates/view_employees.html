@@ -36,4 +36,13 @@
         {% endfor %}
     </tbody>
 </table>
+
+
+<div class="pagination">
+    {% if page > 1 %}
+        <a href="{{ url_for('view_employees', page=page-1) }}">Previous</a>
+    {% endif %}
+    <span>Page {{ page }}</span>
+    <a href="{{ url_for('view_employees', page=page+1) }}">Next</a>
+</div>
 {% endblock %}
