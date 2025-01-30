@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
+
+
+<form method="GET" action="{{ url_for('view_employees') }}">
+    <input type="text" name="search" placeholder="Search by name or email">
+    <button type="submit">Search</button>
+</form>
 <h2>Employee List</h2>
 <table>
     <thead>
