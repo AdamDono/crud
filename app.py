@@ -34,14 +34,17 @@ def add_employee():
 # View Employees Route
 @app.route('/view')
 def view_employees():
+    search_query = request.args.get('search', '')
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM employees;')
+    cur.execute(
+        'SELECT * FROM employees WHERE first_name ILIKE %s OR last_name ILIKE %s OR email ILIKE %s',
+        (f'%{search_query}%', f'%{search_query}%', f'%{search_query}%')
+    )
     employees = cur.fetchall()
     cur.close()
     conn.close()
     return render_template('view_employees.html', employees=employees)
-
 # Delete Employee Route
 @app.route('/delete/<int:id>')
 def delete_employee(id):
