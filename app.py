@@ -35,16 +35,19 @@ def add_employee():
 @app.route('/view')
 def view_employees():
     search_query = request.args.get('search', '')
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of employees per page
+    offset = (page - 1) * per_page
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
         'SELECT * FROM employees WHERE first_name ILIKE %s OR last_name ILIKE %s OR email ILIKE %s',
-        (f'%{search_query}%', f'%{search_query}%', f'%{search_query}%')
+        (f'%{search_query}%', f'%{search_query}%', f'%{search_query}%',)
     )
     employees = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template('view_employees.html', employees=employees)
+    return render_template('view_employees.html', employees=employees , page=page)
 # Delete Employee Route
 @app.route('/delete/<int:id>')
 def delete_employee(id):
