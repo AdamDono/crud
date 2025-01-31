@@ -1,5 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for
 from database import get_db_connection
+import io
+import csv
+from flask import make_response
+
 
 app = Flask(__name__)
 
@@ -7,6 +11,27 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+@app.route('/export')
+def export_employees():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM employees;')
+    employees = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    # Create a CSV file
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Department'])
+    for employee in employees:
+        writer.writerow(employee)
+
+    # Return the CSV file as a download
+    response = make_response(output.getvalue())
+    response.headers['Content-Disposition'] = 'attachment; filename=employees.csv'
+    response.headers['Content-type'] = 'text/csv'
+    return response
 
 # Add Employee Route
 @app.route('/add', methods=['GET', 'POST'])

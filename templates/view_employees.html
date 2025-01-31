@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<a href="{{ url_for('export_employees') }}" class="btn-export">Export to CSV</a>
 
 <form method="GET" action="{{ url_for('view_employees') }}">
     <input type="text" name="search" placeholder="Search by name or email">
