@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for
 from database import get_db_connection
 
 app = Flask(__name__)
@@ -91,6 +91,21 @@ def update_employee(id):
     conn.close()
     return render_template('update_employee.html', employee=employee)
 
+
+@app.route('/employee/<int:id>')
+def employee_profile(id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM employees WHERE id = %s', (id,))
+    employee = cur.fetchone()  # Fetches a single row
+    cur.close()
+    conn.close()
+    
+    if employee is None:
+        # Handle case where no employee is found
+        return "Employee not found", 404
+    
+    return render_template('employee_profile.html', employee=employee)
 
 # Run the App
 if __name__ == '__main__':

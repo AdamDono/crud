@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="profile-container">
+    <h2>{{ employee[1] }} {{ employee[2] }}</h2>
+    <div class="profile-details">
+        <p><strong>ID:</strong> {{ employee[0] }}</p>
+        <p><strong>Email:</strong> {{ employee[3] }}</p>
+        <p><strong>Phone:</strong> {{ employee[4] }}</p>
+        <p><strong>Department:</strong> {{ employee[5] }}</p>
+    </div>
+    <a href="{{ url_for('view_employees') }}" class="btn-back">Back to List</a>
+</div>
+{% endblock %}
