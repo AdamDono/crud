@@ -3,8 +3,6 @@ from database import get_db_connection
 import io
 import csv
 
-
-
 app = Flask(__name__)
 
 # Home Route
@@ -85,8 +83,6 @@ def delete_employee(id):
 
     return redirect(url_for('view_employees'))
 
-
-
 # Update Employee Route
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 def update_employee(id):
@@ -116,8 +112,6 @@ def update_employee(id):
     conn.close()
     return render_template('update_employee.html', employee=employee)
 
-
-# Run the App
 if __name__ == '__main__':
     app.run(debug=True)
   
